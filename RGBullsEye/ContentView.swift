@@ -10,6 +10,8 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @ObservedObject var timer = TimeCounter()
+    
     let rTarget = Double.random(in: 0..<1)
     let gTarget = Double.random(in: 0..<1)
     let bTarget = Double.random(in: 0..<1)
@@ -40,18 +42,21 @@ struct ContentView: View {
                 VStack {
                     ZStack(alignment: .center) {
                         Color(red: rGuess, green: gGuess, blue: bGuess)
-                        Text("60")
+                        Text(String(timer.counter))
                             .padding(.all, 5)
                             .background(Color.white)
                             .mask(Circle())
-                        .foregroundColor(.black)
+                            .foregroundColor(.black)
                     }
                     Text("R: \(Int(rGuess * 255.0))"
                         + " G: \(Int(gGuess * 255.0))"
                         + " B: \(Int(bGuess * 255.0))")
                 }
             }
-            Button(action: {self.showAlert = true}) {  // need the self because showAlert is inside a closure.
+            Button(action: {
+                self.timer.killTimer()
+                self.showAlert = true
+            }) {  // need the self because showAlert is inside a closure.
                 Text("Hit Me!")
             }.alert(isPresented: $showAlert) {
                 Alert(title: Text("Your Score"),
